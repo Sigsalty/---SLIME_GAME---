@@ -6,7 +6,7 @@ public class playerMovement : MonoBehaviour
 {
     #region NON Configurable Values
     private Rigidbody2D rigidBody;
-    private CircleCollider2D circleCollicer;
+    private CircleCollider2D circleCollider;
     private BoxCollider2D boxCollicer;
     private string state = "Grounded";
     private string debugState = "Grounded";
@@ -39,14 +39,13 @@ public class playerMovement : MonoBehaviour
     private void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
-        circleCollicer = GetComponent<CircleCollider2D>();
+        circleCollider = GetComponent<CircleCollider2D>();
         boxCollicer = GetComponent<BoxCollider2D>();
         timerMain = new Stopwatch();
     }
     private void Update()
     {
         stateMachine();
-        if (checkColliderOffset())
         debuger();
     }
     #endregion
@@ -77,10 +76,11 @@ public class playerMovement : MonoBehaviour
     }
     private bool checkColliderOffset(Vector2 Direction, float Length, LayerMask Layer, CircleCollider2D circle = null, BoxCollider2D box = null)
     {
-        RaycastHit2D rayCastHit = new RaycastHit2D();
+        RaycastHit2D rayCastHit;
+
         if (circle != null)
         {
-            RaycastHit2D rayCastHit = Physics2D.CircleCast(circle.bounds.center, circle.radius, Direction, Length, Layer);
+            rayCastHit = Physics2D.CircleCast(circle.bounds.center, circle.radius, Direction, Length, Layer);
         }
         else
         {
@@ -90,7 +90,7 @@ public class playerMovement : MonoBehaviour
     }
     private bool grounded()
     {
-        if (checkColliderOffset(Vector2.down, 0.1f, layer_SOLID)) { return true; }
+        if (checkColliderOffset(Vector2.down, 0.1f, layer_SOLID, circleCollider)) { return true; }
         return false;
     }
     private void airborneState()
